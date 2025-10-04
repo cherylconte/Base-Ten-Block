@@ -179,15 +179,23 @@ function autoPlaceBlock(block){
   const blockWidth = block.offsetWidth;
   const blockHeight = block.offsetHeight;
 
-  if(blockType==='unit'){
-    // Ones: stack vertically in columns of 10
-    if(!targetCol.onesStacks) targetCol.onesStacks=[];
-    let colIndex = Math.floor(targetCol.onesStacks.length /10);
-    let rowIndex = targetCol.onesStacks.length %10;
-    const colOffset = (targetCol.element.offsetWidth - 20*10)/2 + rowIndex*blockWidth;
-    block.style.left = targetCol.element.offsetLeft + colOffset + 'px';
-    block.style.top = targetCol.element.offsetTop + labelHeight + colIndex*(blockHeight+padding) + 'px';
-    targetCol.onesStacks.push(block);
+ if(blockType==='unit'){
+  // Ones: vertical stacking, new column after 10
+  if(!targetCol.onesStacks) targetCol.onesStacks=[]; // array of all placed ones
+
+  let colIndex = Math.floor(targetCol.onesStacks.length / 10); // which vertical column
+  let rowIndex = targetCol.onesStacks.length % 10;             // vertical position in column
+
+  const colWidth = blockWidth + padding;
+  const offsetX = 10 + colIndex * colWidth; // 10px from left + column offset
+  const offsetY = labelHeight + rowIndex * (blockHeight + padding); // stack downwards
+
+  block.style.left = targetCol.element.offsetLeft + offsetX + 'px';
+  block.style.top = targetCol.element.offsetTop + offsetY + 'px';
+
+  targetCol.onesStacks.push(block);
+}
+
 
   } else if(blockType==='rod'){
     // Tens: horizontal stacking 10 per row
